@@ -1,0 +1,168 @@
+
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>מון - Moon</title>
+<style>
+* {box-sizing:border-box}
+body {
+  margin:0;
+  background:#080d19;
+  color:white;
+  font-family:Arial,sans-serif;
+}
+header {
+  background:#101a30;
+  padding:17px;
+  display:flex;
+  align-items:center;
+  gap:12px;
+  position:sticky;
+  top:0;
+}
+.logo {
+  color:#45a5ff;
+  font-size:30px;
+}
+header h1 {
+  margin:0;
+  color:#65b7ff;
+  font-size:25px;
+}
+.search {
+  padding:12px;
+  background:#17243b;
+  border:1px solid #263c5c;
+  border-radius:20px;
+  color:white;
+  width:100%;
+  margin:15px 0;
+}
+main {padding:15px}
+h2 {color:#83c5ff}
+.upload {
+  display:block;
+  background:#1766b5;
+  padding:15px;
+  text-align:center;
+  border-radius:14px;
+  font-weight:bold;
+  margin:15px 0;
+}
+.upload input {display:none}
+.video {
+  background:#111c30;
+  border-radius:15px;
+  overflow:hidden;
+  margin-bottom:20px;
+}
+video {
+  width:100%;
+  max-height:260px;
+  background:black;
+}
+.info {padding:13px}
+button {
+  background:#193b65;
+  color:white;
+  border:0;
+  padding:10px 16px;
+  border-radius:20px;
+  margin:5px;
+}
+nav {
+  position:fixed;
+  bottom:0;
+  width:100%;
+  background:#101a30;
+  display:flex;
+  justify-content:space-around;
+  padding:14px;
+}
+nav span {color:#8bcaff}
+#videos {padding-bottom:75px}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">☾</div>
+  <h1>מון</h1>
+</header>
+
+<main>
+  <h2>ברוכים הבאים למון 🌙</h2>
+  <p>המקום שלך לסרטונים</p>
+
+  <input class="search" id="search"
+  placeholder="🔍 חפש סרטונים..."
+  oninput="searchVideos()">
+
+  <label class="upload">
+    ＋ העלאת סרטון
+    <input type="file" accept="video/*"
+    onchange="uploadVideo(event)">
+  </label>
+
+  <h2>סרטונים</h2>
+  <div id="videos"></div>
+</main>
+
+<nav>
+  <span>⌂ בית</span>
+  <span>🔍 חיפוש</span>
+  <span>＋ העלאה</span>
+  <span>☾ מון</span>
+</nav>
+
+<script>
+function uploadVideo(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  const url = URL.createObjectURL(file);
+  const card = document.createElement("div");
+  card.className = "video";
+  card.dataset.name = file.name.toLowerCase();
+
+  const player = document.createElement("video");
+  player.src = url;
+  player.controls = true;
+
+  const info = document.createElement("div");
+  info.className = "info";
+
+  const title = document.createElement("p");
+  title.textContent = file.name;
+
+  const like = document.createElement("button");
+  like.textContent = "♡ לייק";
+  like.onclick = function() {
+    like.textContent =
+      like.textContent.includes("♡") ? "♥ אהבתי" : "♡ לייק";
+  };
+
+  info.append(title, like);
+  card.append(player, info);
+
+  document.getElementById("videos")
+    .prepend(card);
+
+  event.target.value = "";
+}
+
+function searchVideos() {
+  const query = document.getElementById("search")
+    .value.toLowerCase();
+
+  document.querySelectorAll(".video").forEach(card => {
+    card.style.display =
+      card.dataset.name.includes(query) ? "block" : "none";
+  });
+}
+</script>
+
+</body>
+</html>
